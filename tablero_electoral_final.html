@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Regiones y Exterior · Segunda Vuelta 2026</title>
 
+<!-- AQUÍ CONECTAMOS TU ARCHIVO DE DATOS REAL -->
+<script src="datos.js"></script>
+
 <style>
   :root {
     --verde: #1a7a4a;
@@ -718,26 +721,8 @@
 </footer>
 
 <script>
-// ─── DATOS SIMULADOS PARA QUE FUNCIONE INMEDIATAMENTE ────
-// NOTA: Cuando tengas tu archivo data.js listo, puedes borrar todo este bloque `window.REGIONES_DATA = {...};` 
-// y volver a agregar `<script src="data.js"><\/script>` en el <head>.
-window.REGIONES_DATA = {
-  resumen: { votos_cepeda: 3450000, cepeda: 45.2 },
-  departamentos: [
-    { dep: "BOG", depto: "Bogota D.C.", cepeda: 41.8, ganadas: 0, disputa: 1, adversas: 0, votos_cepeda: 1595406, joven: 22.5 },
-    { dep: "ANT", depto: "Antioquia", cepeda: 25.0, ganadas: 5, disputa: 10, adversas: 109, votos_cepeda: 694211, joven: 21.1 },
-    { dep: "VAL", depto: "Valle", cepeda: 53.2, ganadas: 20, disputa: 15, adversas: 7, votos_cepeda: 997827, joven: 23.0 },
-    { dep: "ATL", depto: "Atlantico", cepeda: 56.4, ganadas: 15, disputa: 5, adversas: 3, votos_cepeda: 465907, joven: 24.2 }
-  ],
-  municipios: {
-    "bogota": { slug: "bogota", municipio: "Bogota D.C.", depto: "Bogota D.C.", dep: "BOG", estado: "disputa", cepeda: 41.8, derecha: 58.2, swing: -0.5, votos_cepeda: 1595406, joven: 22.5, lat: 4.6097, lon: -74.0817, votos_total: 3816763, n_puestos: 900, margen: -16.4 },
-    "medellin": { slug: "medellin", municipio: "Medellin", depto: "Antioquia", dep: "ANT", estado: "adversa", cepeda: 24.3, derecha: 75.7, swing: -0.2, votos_cepeda: 288584, joven: 21.1, lat: 6.2442, lon: -75.5812, votos_total: 1187591, n_puestos: 223, margen: -51.4, texto: "Prioridad: focalizar, cuidar puestos afines y recortar diferencia sin dispersar recursos." },
-    "cali": { slug: "cali", municipio: "Cali", depto: "Valle", dep: "VAL", estado: "ganada", cepeda: 51.6, derecha: 48.4, swing: 2.1, votos_cepeda: 520591, joven: 23.5, lat: 3.4516, lon: -76.5320, votos_total: 1008897, n_puestos: 188, margen: 3.2 },
-    "barranquilla": { slug: "barranquilla", municipio: "Barranquilla", depto: "Atlantico", dep: "ATL", estado: "ganada", cepeda: 54.9, derecha: 45.1, swing: 4.5, votos_cepeda: 231895, joven: 24.8, lat: 10.9685, lon: -74.7813, votos_total: 422395, n_puestos: 119, margen: 9.8 }
-  }
-};
-
 // ─── DATA ────────────────────────────────────────────
+// Aquí se conecta con el archivo datos.js
 const D = window.REGIONES_DATA;
 const MUNIS_ARR = Object.values(D.municipios);
 const DEPS = D.departamentos;
@@ -885,13 +870,14 @@ function drawMap() {
   function toX(lon) { return pad + (lon - minLon)/(maxLon - minLon) * (W - 2*pad); }
   function toY(lat) { return pad + (maxLat - lat)/(maxLat - minLat) * (H - 2*pad); }
 
-  // AUMENTAMOS EL TAMAÑO DE LOS CÍRCULOS (Radio)
+  // 🔴 AQUÍ ES DONDE AUMENTAMOS EL TAMAÑO DE LOS CÍRCULOS
   const maxVotos = Math.max(...withCoords.map(m => m.votos_cepeda||0));
   function getR(m) {
-    if (mapMode === 'votos') return 6 + Math.sqrt((m.votos_cepeda||0)/maxVotos) * 25; // Aumentado
-    if (mapMode === 'swing') return 7 + Math.min(Math.abs(m.swing||0)/30, 1) * 18; // Aumentado
-    return 9; // Aumentado (antes era 5)
+    if (mapMode === 'votos') return 6 + Math.sqrt((m.votos_cepeda||0)/maxVotos) * 25;
+    if (mapMode === 'swing') return 7 + Math.min(Math.abs(m.swing||0)/30, 1) * 18;
+    return 9; // Tamaño por defecto (antes era 5)
   }
+  
   function getColor(m) {
     if (mapMode === 'apoyo') return colorByEstado(m);
     if (mapMode === 'swing') {
@@ -1140,6 +1126,14 @@ function drawPagination() {
   el.innerHTML = html;
 }
 
+function goPage(p) {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  drawTable();
+  document.getElementById('tab-municipios').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
 // ─── MODAL ───────────────────────────────────────────
 function openModal(slug) {
   const m = D.municipios[slug];
@@ -1263,7 +1257,14 @@ function escHtml(s) {
 }
 
 // ─── START ───────────────────────────────────────────
-init();
+// Pequeña validación de seguridad por si el archivo datos.js se demora en cargar
+window.onload = function() {
+  if(window.REGIONES_DATA) {
+    init();
+  } else {
+    console.error("El archivo datos.js no cargó correctamente o no tiene la variable window.REGIONES_DATA");
+  }
+};
 </script>
 </body>
 </html>
