@@ -83,9 +83,9 @@
 
   /* SCATTER */
   .scatter-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; box-shadow: var(--sombra); }
-  #scatter-svg { width: 100%; height: 280px; display: block; }
-  .scatter-dot { cursor: pointer; }
-  .scatter-dot:hover { opacity: 0.7; }
+  #scatter-svg { width: 100%; height: 320px; display: block; }
+  .scatter-dot { cursor: pointer; transition: all 0.1s ease; }
+  .scatter-dot:hover { opacity: 0.9; stroke: #000; stroke-width: 1.5; }
 
   /* TOOLTIP SVG */
   #tooltip { position: fixed; background: white; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 10px 14px; font-size: 12px; box-shadow: var(--sombra-md); pointer-events: none; z-index: 9999; display: none; max-width: 220px; }
@@ -114,7 +114,6 @@
   table { width: 100%; border-collapse: collapse; font-size: 13px; }
   thead th { background: var(--gris-claro); padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto-suave); cursor: pointer; white-space: nowrap; user-select: none; }
   thead th:hover { background: #e5e7eb; }
-  thead th.sorted { color: var(--verde); }
   tbody tr { border-bottom: 1px solid var(--gris-claro); cursor: pointer; transition: background 0.1s; }
   tbody tr:hover { background: #f8faf9; }
   tbody tr:last-child { border-bottom: none; }
@@ -263,9 +262,9 @@
     <div class="tab" data-tab="departamentos" onclick="switchTab('departamentos')">📊 Departamentos</div>
     <div class="tab" data-tab="municipios" onclick="switchTab('municipios')">📋 Municipios</div>
     <div class="tab" data-tab="analisis" onclick="switchTab('analisis')">📈 Edad y voto</div>
-    <div class="tab" data-tab="jovenes" onclick="switchTab('jovenes')">📱 Foco Joven</div>
-    <!-- NUEVA PESTAÑA DE VOLUMEN -->
-    <div class="tab" data-tab="volumen" onclick="switchTab('volumen')">🗳️ Alto Impacto (Volumen)</div>
+    <!-- PESTAÑAS RENOMBRADAS -->
+    <div class="tab" data-tab="jovenes" onclick="switchTab('jovenes')">📱 Porcentaje Jóvenes</div>
+    <div class="tab" data-tab="volumen" onclick="switchTab('volumen')">🗳️ Volumen</div>
   </div>
 
   <!-- TAB: MAPA -->
@@ -310,9 +309,9 @@
           <thead>
             <tr>
               <th onclick="sortTable('municipio')">Municipio ↕</th>
-              <th onclick="sortTable('depto')">Depto</th>
-              <th onclick="sortTable('estado')">Estado</th>
-              <th onclick="sortTable('cepeda')" class="sorted">% Cepeda ↕</th>
+              <th onclick="sortTable('depto')">Depto ↕</th>
+              <th onclick="sortTable('estado')">Estado ↕</th>
+              <th onclick="sortTable('cepeda')">% Cepeda ↕</th>
               <th onclick="sortTable('swing')">Swing ↕</th>
               <th onclick="sortTable('votos_cepeda')">Votos ↕</th>
               <th onclick="sortTable('joven')">% Jóvenes ↕</th>
@@ -325,11 +324,11 @@
     </div>
   </div>
 
-  <!-- TAB: ANÁLISIS -->
+  <!-- TAB: ANÁLISIS (SCATTER) -->
   <div id="tab-analisis" class="section">
     <div class="scatter-card">
-      <div class="section-title">Edad y voto <span class="pill">% jóvenes vs % Cepeda por municipio</span></div>
-      <p style="font-size:12px;color:var(--gris);margin-bottom:12px">Cada punto es un municipio del filtro activo. Pasa el cursor para ver datos o haz clic para abrir el municipio.</p>
+      <div class="section-title">Edad y voto <span class="pill">Tamaño burbuja = Total Votantes</span></div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:12px">Cada punto es un municipio. El tamaño refleja el volumen total de votos. Pasa el cursor para ver datos o haz clic para detalles.</p>
       <svg id="scatter-svg"></svg>
       <div class="map-legend" style="margin-top:10px">
         <div class="legend-item"><div class="legend-dot" style="background:var(--verde)"></div> Ganada</div>
@@ -339,25 +338,25 @@
     </div>
   </div>
 
-  <!-- TAB: FOCO JOVEN -->
+  <!-- TAB: PORCENTAJE JÓVENES -->
   <div id="tab-jovenes" class="section">
     <div class="table-card">
       <div class="table-header" style="background:var(--morado-bg); border-bottom:1px solid #c7d2fe;">
         <div>
-          <div class="section-title" style="margin:0; color:var(--morado)">Top 20: Municipios más Jóvenes del Filtro</div>
-          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Priorización para estrategias digitales (TikTok, Instagram), agenda universitaria y voto de opinión.</p>
+          <div class="section-title" style="margin:0; color:var(--morado)">Municipios por Porcentaje de Jóvenes</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Priorización de votantes entre 18 y 28 años. <b>Haz clic en los encabezados para ordenar.</b></p>
         </div>
       </div>
       <div style="overflow-x:auto">
         <table>
           <thead>
             <tr>
-              <th>Rango</th>
-              <th>Municipio</th>
-              <th>% Jóvenes</th>
-              <th>Estado Actual</th>
-              <th>Votos Cepeda</th>
-              <th>Estrategia Sugerida</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('municipio')">Municipio ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('depto')">Depto ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('joven')">% Jóvenes ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('estado')">Estado Actual ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('votos_total')">Votantes Totales ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('votos_cepeda')">Votos Cepeda ↕</th>
             </tr>
           </thead>
           <tbody id="jovenes-tbody"></tbody>
@@ -366,26 +365,25 @@
     </div>
   </div>
 
-  <!-- NUEVA TAB: ALTO IMPACTO (VOLUMEN DE VOTANTES) -->
+  <!-- TAB: VOLUMEN (ALTO IMPACTO) -->
   <div id="tab-volumen" class="section">
     <div class="table-card">
       <div class="table-header" style="background:var(--azul-bg); border-bottom:1px solid #bfdbfe;">
         <div>
-          <div class="section-title" style="margin:0; color:var(--azul)">Top 20: Mayor Cantidad de Votantes</div>
-          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Los grandes centros urbanos de este filtro. Concentran la mayor masa electoral. Claves para el esfuerzo logístico y pauta masiva.</p>
+          <div class="section-title" style="margin:0; color:var(--azul)">Municipios por Volumen Electoral</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Los grandes centros urbanos del filtro. Concentran la mayor masa electoral. <b>Haz clic en los encabezados para ordenar.</b></p>
         </div>
       </div>
       <div style="overflow-x:auto">
         <table>
           <thead>
             <tr>
-              <th>Rango</th>
-              <th>Municipio</th>
-              <th>Total Votantes</th>
-              <th>Votos Cepeda</th>
-              <th>Estado Actual</th>
-              <th>Margen Local</th>
-              <th>Enfoque Estratégico</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('municipio')">Municipio ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('votos_total')">Total Votantes ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('votos_cepeda')">Votos Cepeda ↕</th>
+              <th style="color:var(--azul)">Cepeda vs Otros</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('estado')">Estado Actual ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('margen')">Margen Local ↕</th>
             </tr>
           </thead>
           <tbody id="volumen-tbody"></tbody>
@@ -411,10 +409,13 @@ let activeFilters = { dep: '', search: '', estado: '', orden: 'estrategico' };
 let mapMode = 'apoyo';
 let currentPage = 1;
 const PAGE_SIZE = 25;
-let sortCol = 'cepeda';
-let sortDir = -1;
-let filtered = [];
 
+// Variables para ordenamiento de cada tabla
+let sortCol = 'cepeda'; let sortDir = -1;
+let sortColJoven = 'joven'; let sortDirJoven = -1;
+let sortColVolumen = 'votos_total'; let sortDirVolumen = -1;
+
+let filtered = [];
 let leafletMap;
 let mapCirclesLayer;
 
@@ -477,7 +478,7 @@ function applyFilters(zoomToBounds = false) {
   drawTopList();
   drawTable();
   drawFocoJoven();
-  drawAltoImpacto(); // Llamamos a la nueva función de volumen
+  drawAltoImpacto(); 
   drawResumen();
   drawDepGrid();
 }
@@ -511,6 +512,20 @@ function sortTable(col) {
   });
   currentPage = 1;
   drawTable();
+}
+
+// Lógica de ordenamiento para la tabla JÓVENES
+function sortJovenes(col) {
+  if (sortColJoven === col) sortDirJoven *= -1;
+  else { sortColJoven = col; sortDirJoven = -1; }
+  drawFocoJoven();
+}
+
+// Lógica de ordenamiento para la tabla VOLUMEN
+function sortVolumen(col) {
+  if (sortColVolumen === col) sortDirVolumen *= -1;
+  else { sortColVolumen = col; sortDirVolumen = -1; }
+  drawAltoImpacto();
 }
 
 // ─── LEAFLET MAP ─────────────────────────────────────
@@ -632,23 +647,26 @@ function drawMap(zoomToBounds = false) {
   }
 }
 
-// ─── SCATTER ─────────────────────────────────────────
+// ─── SCATTER (NUEVO RADIO POR VOTOS TOTALES) ─────────
 function drawScatter() {
   const svg = document.getElementById('scatter-svg');
   const bbox = svg.getBoundingClientRect();
-  const W = bbox.width || 460, H = 280;
+  const W = bbox.width || 460, H = 320; // Un poco más alto para dar espacio a burbujas grandes
   svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
 
   const withData = filtered.filter(m => m.joven !== null && m.cepeda !== null);
   if (withData.length === 0) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="13">Sin datos para mostrar</text>'; return; }
 
-  const pad = { l:40, r:16, t:10, b:35 };
+  const pad = { l:40, r:16, t:20, b:35 };
   const iW = W - pad.l - pad.r, iH = H - pad.t - pad.b;
 
   const jovens = withData.map(m => m.joven);
   const ceps = withData.map(m => m.cepeda);
   const minJ = Math.max(0, Math.min(...jovens)-2), maxJ = Math.min(100, Math.max(...jovens)+2);
   const minC = Math.max(0, Math.min(...ceps)-5), maxC = Math.min(100, Math.max(...ceps)+5);
+  
+  // Buscar el máximo total de votos del filtro para escalar las burbujas
+  const maxVotosTotal = Math.max(1, ...withData.map(m => m.votos_total || 0));
 
   function px(j) { return pad.l + (j-minJ)/(maxJ-minJ)*iW; }
   function py(c) { return pad.t + iH - (c-minC)/(maxC-minC)*iH; }
@@ -671,10 +689,16 @@ function drawScatter() {
   html += `<text x="${pad.l + iW/2}" y="${H-2}" text-anchor="middle" font-size="11" fill="#6b7280">% Votantes jóvenes</text>`;
   html += `<text x="10" y="${pad.t + iH/2}" text-anchor="middle" font-size="11" fill="#6b7280" transform="rotate(-90,10,${pad.t+iH/2})">% Cepeda</text>`;
 
-  withData.forEach(m => {
+  // Ordenar de mayor a menor votos_total para que las burbujas pequeñas queden encima de las grandes
+  const sortedData = [...withData].sort((a,b) => (b.votos_total||0) - (a.votos_total||0));
+
+  sortedData.forEach(m => {
     const x = px(m.joven), y = py(m.cepeda);
     const c = colorByEstadoStr(m.estado);
-    html += `<circle class="scatter-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="4" fill="${c}" fill-opacity="0.65" stroke="white" stroke-width="0.8"
+    // Calcular el radio dinámico según la cantidad de votantes
+    const r = 3 + Math.sqrt((m.votos_total || 0) / maxVotosTotal) * 18; 
+    
+    html += `<circle class="scatter-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${c}" fill-opacity="0.65" stroke="white" stroke-width="0.8"
       onmouseenter="showTip(event,'${escHtml(m.municipio)}','${escHtml(m.depto)}',${m.cepeda},${m.votos_cepeda},${m.swing||0},'${m.estado}')"
       onmouseleave="hideTip()"
       onclick="openModal('${m.slug}')"></circle>`;
@@ -683,75 +707,87 @@ function drawScatter() {
   svg.innerHTML = html;
 }
 
-// ─── FOCO JOVEN ──────────────────────────────────────
+// ─── FOCO JOVEN (ACTUALIZADO CON ORDENAMIENTO) ───────
 function drawFocoJoven() {
   const tbody = document.getElementById('jovenes-tbody');
   
-  const conJovenes = filtered.filter(m => m.joven !== null && m.joven !== undefined);
-  const top20 = conJovenes.sort((a,b) => b.joven - a.joven).slice(0, 20);
+  let conJovenes = filtered.filter(m => m.joven !== null && m.joven !== undefined);
+  
+  // Ordenamiento dinámico
+  conJovenes.sort((a,b) => {
+    let av = a[sortColJoven], bv = b[sortColJoven];
+    if (typeof av === 'string') return sortDirJoven * av.localeCompare(bv||'');
+    return sortDirJoven * ((av||0) - (bv||0));
+  });
 
-  if (top20.length === 0) {
+  // Mostrar los primeros 50 para no sobrecargar el navegador
+  const topList = conJovenes.slice(0, 50);
+
+  if (topList.length === 0) {
     tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No hay datos de jóvenes en este filtro</td></tr>';
     return;
   }
 
-  tbody.innerHTML = top20.map((m, i) => {
-    let estrategia = '';
-    if (m.estado === 'adversa') {
-      estrategia = '🔴 Urgente: Pauta en TikTok/IG, activismo en universidades locales.';
-    } else if (m.estado === 'disputa') {
-      estrategia = '🟡 Clave: Voluntariado, eventos culturales, influencers de la zona.';
-    } else {
-      estrategia = '🟢 Mantener: Mensajes de WhatsApp, pedagogía para salir a votar.';
-    }
-
+  tbody.innerHTML = topList.map(m => {
     return `
       <tr onclick="openModal('${m.slug}')">
-        <td style="color:var(--gris)"><b>#${i+1}</b></td>
-        <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
+        <td><div class="td-muni">${m.municipio}</div></td>
+        <td><div class="td-depto">${m.depto}</div></td>
         <td><b style="color:var(--morado);font-size:14px">${m.joven}%</b></td>
         <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td><b>${fmtVotos(m.votos_total)}</b></td>
         <td>${fmtVotos(m.votos_cepeda)}</td>
-        <td style="font-size:12px;font-weight:600;color:var(--texto-suave)">${estrategia}</td>
       </tr>
     `;
   }).join('');
 }
 
-// ─── ALTO IMPACTO (VOLUMEN) NUEVA FUNCIÓN ────────────
+// ─── ALTO IMPACTO (VOLUMEN Y CEPEDA VS OTROS) ────────
 function drawAltoImpacto() {
   const tbody = document.getElementById('volumen-tbody');
   
-  // Ordenamos por cantidad TOTAL de votantes en el municipio
-  const top20 = [...filtered].sort((a,b) => (b.votos_total || 0) - (a.votos_total || 0)).slice(0, 20);
+  let list = [...filtered];
+  
+  // Ordenamiento dinámico
+  list.sort((a,b) => {
+    let av = a[sortColVolumen], bv = b[sortColVolumen];
+    if (typeof av === 'string') return sortDirVolumen * av.localeCompare(bv||'');
+    return sortDirVolumen * ((av||0) - (bv||0));
+  });
 
-  if (top20.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">No hay datos en este filtro</td></tr>';
+  const topList = list.slice(0, 50);
+
+  if (topList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No hay datos en este filtro</td></tr>';
     return;
   }
 
-  tbody.innerHTML = top20.map((m, i) => {
-    let estrategia = '';
-    if (m.estado === 'disputa') {
-      estrategia = '⚔️ Batalla campal: Pauta masiva, visita del candidato y plaza pública.';
-    } else if (m.estado === 'ganada') {
-      estrategia = '🛡️ Fortín: Cuidar testigos electorales, asegurar transporte el día D.';
-    } else {
-      estrategia = '🎯 Nichos: Voto de opinión, contrastar propuestas sin peleas locales.';
-    }
-
+  tbody.innerHTML = topList.map(m => {
     const margenSign = (m.margen||0) >= 0 ? '+' : '';
     const margenColor = (m.margen||0) >= 0 ? 'var(--verde)' : 'var(--rojo)';
+    
+    // Calcular votos de Otros y porcentajes para la barra
+    const votosOtros = Math.max(0, (m.votos_total || 0) - (m.votos_cepeda || 0));
+    const pctC = m.votos_total > 0 ? ((m.votos_cepeda / m.votos_total) * 100).toFixed(1) : 0;
+    const pctO = (100 - pctC).toFixed(1);
 
     return `
       <tr onclick="openModal('${m.slug}')">
-        <td style="color:var(--gris)"><b>#${i+1}</b></td>
         <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
         <td><b style="color:var(--azul);font-size:14px">${fmtVotos(m.votos_total)}</b></td>
         <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td style="min-width:130px;">
+          <div style="font-size:11px;color:var(--texto-suave);margin-bottom:3px;display:flex;justify-content:space-between;">
+            <span><b>Cep:</b> ${fmtVotos(m.votos_cepeda)}</span>
+            <span><b>Otr:</b> ${fmtVotos(votosOtros)}</span>
+          </div>
+          <div style="display:flex; height:6px; width:100%; border-radius:3px; overflow:hidden;">
+            <div style="width:${pctC}%; background:var(--verde);"></div>
+            <div style="width:${pctO}%; background:var(--rojo);"></div>
+          </div>
+        </td>
         <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
         <td><b style="color:${margenColor}">${margenSign}${m.margen||0} pts</b></td>
-        <td style="font-size:12px;font-weight:600;color:var(--texto-suave)">${estrategia}</td>
       </tr>
     `;
   }).join('');
