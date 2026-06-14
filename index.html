@@ -22,6 +22,8 @@
     --amarillo-bg: #fef9e7;
     --morado: #6366f1;
     --morado-bg: #e0e7ff;
+    --azul: #2563eb;
+    --azul-bg: #dbeafe;
     --gris: #6b7280;
     --gris-claro: #f3f4f6;
     --gris-borde: #e5e7eb;
@@ -167,8 +169,8 @@
   .dep-mini { font-size: 11px; color: var(--gris); display: flex; gap: 8px; margin-top: 4px; }
 
   /* TABS */
-  .tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 2px solid var(--gris-claro); padding-bottom: 0; }
-  .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--gris); transition: all 0.15s; }
+  .tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 2px solid var(--gris-claro); padding-bottom: 0; overflow-x: auto; white-space: nowrap; }
+  .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--gris); transition: all 0.15s; flex-shrink: 0; }
   .tab.active { color: var(--verde); border-bottom-color: var(--verde); }
   .tab:hover { color: var(--texto); }
   .section { display: none; }
@@ -261,8 +263,9 @@
     <div class="tab" data-tab="departamentos" onclick="switchTab('departamentos')">📊 Departamentos</div>
     <div class="tab" data-tab="municipios" onclick="switchTab('municipios')">📋 Municipios</div>
     <div class="tab" data-tab="analisis" onclick="switchTab('analisis')">📈 Edad y voto</div>
-    <!-- NUEVA PESTAÑA -->
     <div class="tab" data-tab="jovenes" onclick="switchTab('jovenes')">📱 Foco Joven</div>
+    <!-- NUEVA PESTAÑA DE VOLUMEN -->
+    <div class="tab" data-tab="volumen" onclick="switchTab('volumen')">🗳️ Alto Impacto (Volumen)</div>
   </div>
 
   <!-- TAB: MAPA -->
@@ -336,7 +339,7 @@
     </div>
   </div>
 
-  <!-- NUEVA TAB: FOCO JOVEN -->
+  <!-- TAB: FOCO JOVEN -->
   <div id="tab-jovenes" class="section">
     <div class="table-card">
       <div class="table-header" style="background:var(--morado-bg); border-bottom:1px solid #c7d2fe;">
@@ -358,6 +361,34 @@
             </tr>
           </thead>
           <tbody id="jovenes-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- NUEVA TAB: ALTO IMPACTO (VOLUMEN DE VOTANTES) -->
+  <div id="tab-volumen" class="section">
+    <div class="table-card">
+      <div class="table-header" style="background:var(--azul-bg); border-bottom:1px solid #bfdbfe;">
+        <div>
+          <div class="section-title" style="margin:0; color:var(--azul)">Top 20: Mayor Cantidad de Votantes</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Los grandes centros urbanos de este filtro. Concentran la mayor masa electoral. Claves para el esfuerzo logístico y pauta masiva.</p>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Rango</th>
+              <th>Municipio</th>
+              <th>Total Votantes</th>
+              <th>Votos Cepeda</th>
+              <th>Estado Actual</th>
+              <th>Margen Local</th>
+              <th>Enfoque Estratégico</th>
+            </tr>
+          </thead>
+          <tbody id="volumen-tbody"></tbody>
         </table>
       </div>
     </div>
@@ -445,7 +476,8 @@ function applyFilters(zoomToBounds = false) {
   drawScatter();
   drawTopList();
   drawTable();
-  drawFocoJoven(); // Llamamos a la nueva función
+  drawFocoJoven();
+  drawAltoImpacto(); // Llamamos a la nueva función de volumen
   drawResumen();
   drawDepGrid();
 }
@@ -460,7 +492,7 @@ function sortFiltered(orden) {
     }
     if (orden === 'votos') return (b.votos_cepeda||0) - (a.votos_cepeda||0);
     if (orden === 'swing_neg') return (a.swing||0) - (b.swing||0);
-    if (orden === 'joven') return (b.joven||-1) - (a.joven||-1); // Orden descendente por jóvenes
+    if (orden === 'joven') return (b.joven||-1) - (a.joven||-1);
     if (orden === 'disputa') {
       const estadoScore = { disputa: 0, ganada: 1, adversa: 2 };
       return (estadoScore[a.estado]||2) - (estadoScore[b.estado]||2);
@@ -651,11 +683,10 @@ function drawScatter() {
   svg.innerHTML = html;
 }
 
-// ─── FOCO JOVEN (NUEVA FUNCIÓN) ──────────────────────
+// ─── FOCO JOVEN ──────────────────────────────────────
 function drawFocoJoven() {
   const tbody = document.getElementById('jovenes-tbody');
   
-  // Filtramos los que tienen dato de jóvenes y los ordenamos de mayor a menor
   const conJovenes = filtered.filter(m => m.joven !== null && m.joven !== undefined);
   const top20 = conJovenes.sort((a,b) => b.joven - a.joven).slice(0, 20);
 
@@ -665,7 +696,6 @@ function drawFocoJoven() {
   }
 
   tbody.innerHTML = top20.map((m, i) => {
-    // Definimos la estrategia según cómo nos está yendo ahí
     let estrategia = '';
     if (m.estado === 'adversa') {
       estrategia = '🔴 Urgente: Pauta en TikTok/IG, activismo en universidades locales.';
@@ -682,6 +712,45 @@ function drawFocoJoven() {
         <td><b style="color:var(--morado);font-size:14px">${m.joven}%</b></td>
         <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
         <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td style="font-size:12px;font-weight:600;color:var(--texto-suave)">${estrategia}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ─── ALTO IMPACTO (VOLUMEN) NUEVA FUNCIÓN ────────────
+function drawAltoImpacto() {
+  const tbody = document.getElementById('volumen-tbody');
+  
+  // Ordenamos por cantidad TOTAL de votantes en el municipio
+  const top20 = [...filtered].sort((a,b) => (b.votos_total || 0) - (a.votos_total || 0)).slice(0, 20);
+
+  if (top20.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;color:#999;padding:20px;">No hay datos en este filtro</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = top20.map((m, i) => {
+    let estrategia = '';
+    if (m.estado === 'disputa') {
+      estrategia = '⚔️ Batalla campal: Pauta masiva, visita del candidato y plaza pública.';
+    } else if (m.estado === 'ganada') {
+      estrategia = '🛡️ Fortín: Cuidar testigos electorales, asegurar transporte el día D.';
+    } else {
+      estrategia = '🎯 Nichos: Voto de opinión, contrastar propuestas sin peleas locales.';
+    }
+
+    const margenSign = (m.margen||0) >= 0 ? '+' : '';
+    const margenColor = (m.margen||0) >= 0 ? 'var(--verde)' : 'var(--rojo)';
+
+    return `
+      <tr onclick="openModal('${m.slug}')">
+        <td style="color:var(--gris)"><b>#${i+1}</b></td>
+        <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
+        <td><b style="color:var(--azul);font-size:14px">${fmtVotos(m.votos_total)}</b></td>
+        <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td><b style="color:${margenColor}">${margenSign}${m.margen||0} pts</b></td>
         <td style="font-size:12px;font-weight:600;color:var(--texto-suave)">${estrategia}</td>
       </tr>
     `;
