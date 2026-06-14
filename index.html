@@ -86,5 +86,959 @@
   .scatter-dot:hover { opacity: 0.9; stroke: #000; stroke-width: 1.5; }
 
   /* TOOLTIP SVG */
-  #tooltip { position: fixed; background: white; border: 1px solid var(--gris-borde
-                                                                       
+  #tooltip { position: fixed; background: white; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 10px 14px; font-size: 12px; box-shadow: var(--sombra-md); pointer-events: none; z-index: 9999; display: none; max-width: 220px; }
+  #tooltip .tt-name { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
+  #tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; color: var(--texto-suave); }
+  #tooltip .tt-val { font-weight: 600; color: var(--texto); }
+
+  /* TOP ESTRATÉGICOS */
+  .top-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; box-shadow: var(--sombra); overflow-y: auto; max-height: 320px; }
+  .top-item { display: flex; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--gris-claro); cursor: pointer; transition: background 0.1s; border-radius: 4px; }
+  .top-item:last-child { border-bottom: none; }
+  .top-item:hover { background: var(--gris-claro); padding-left: 6px; }
+  .top-rank { font-size: 11px; font-weight: 700; color: var(--gris); width: 18px; text-align: center; flex-shrink: 0; }
+  .top-info { flex: 1; min-width: 0; }
+  .top-name { font-weight: 600; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .top-dep { font-size: 11px; color: var(--gris); }
+  .top-badge { font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 20px; flex-shrink: 0; }
+  .badge-disputa { background: var(--amarillo-bg); color: var(--amarillo); }
+  .badge-ganada { background: var(--verde-bg); color: var(--verde); }
+  .badge-adversa { background: var(--rojo-bg); color: var(--rojo); }
+  .top-votos { font-size: 12px; font-weight: 600; color: var(--texto-suave); flex-shrink: 0; }
+
+  /* MUNI TABLE */
+  .table-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; margin-bottom: 16px; box-shadow: var(--sombra); overflow: hidden; }
+  .table-header { padding: 14px 16px; border-bottom: 1px solid var(--gris-borde); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th { background: var(--gris-claro); padding: 8px 12px; text-align: left; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.4px; color: var(--texto-suave); cursor: pointer; white-space: nowrap; user-select: none; }
+  thead th:hover { background: #e5e7eb; }
+  tbody tr { border-bottom: 1px solid var(--gris-claro); cursor: pointer; transition: background 0.1s; }
+  tbody tr:hover { background: #f8faf9; }
+  tbody tr:last-child { border-bottom: none; }
+  td { padding: 8px 12px; vertical-align: middle; }
+  .td-muni { font-weight: 600; }
+  .td-depto { font-size: 11px; color: var(--gris); }
+  .estado-pill { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .pill-ganada { background: var(--verde-bg); color: var(--verde); }
+  .pill-disputa { background: var(--amarillo-bg); color: var(--amarillo); }
+  .pill-adversa { background: var(--rojo-bg); color: var(--rojo); }
+  .pct-bar-wrap { display: flex; align-items: center; gap: 6px; }
+  .pct-bar-bg { flex: 1; height: 5px; background: var(--gris-claro); border-radius: 3px; overflow: hidden; min-width: 40px; }
+  .pct-bar-fill { height: 100%; border-radius: 3px; }
+  .swing-pos { color: var(--verde); font-weight: 600; }
+  .swing-neg { color: var(--rojo); font-weight: 600; }
+  .pagination { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 12px; border-top: 1px solid var(--gris-borde); flex-wrap: wrap; }
+  .page-btn { padding: 4px 10px; border: 1px solid var(--gris-borde); border-radius: 5px; background: white; cursor: pointer; font-size: 12px; color: var(--texto-suave); }
+  .page-btn:hover { background: var(--gris-claro); }
+  .page-btn.active { background: var(--verde); color: white; border-color: var(--verde); font-weight: 700; }
+  .page-btn:disabled { opacity: 0.4; cursor: default; }
+
+  /* MODAL */
+  #modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000; align-items: center; justify-content: center; padding: 16px; }
+  #modal-overlay.open { display: flex; }
+  #modal { background: white; border-radius: 12px; width: 100%; max-width: 500px; max-height: 90vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(0,0,0,0.25); }
+  .modal-header { padding: 20px 20px 14px; border-bottom: 1px solid var(--gris-borde); display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+  .modal-title { font-size: 18px; font-weight: 700; }
+  .modal-sub { font-size: 13px; color: var(--gris); margin-top: 2px; }
+  .modal-close { background: var(--gris-claro); border: none; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 16px; color: var(--gris); flex-shrink: 0; }
+  .modal-body { padding: 20px; }
+  .modal-stats { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+  .mstat { background: var(--gris-claro); border-radius: 8px; padding: 10px 12px; text-align: center; }
+  .mstat-num { font-size: 20px; font-weight: 700; line-height: 1; }
+  .mstat-label { font-size: 11px; color: var(--gris); margin-top: 2px; }
+  .modal-bars { margin-bottom: 16px; }
+  .mbar-row { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .mbar-label { font-size: 12px; width: 80px; flex-shrink: 0; }
+  .mbar-bg { flex: 1; height: 8px; background: var(--gris-claro); border-radius: 4px; overflow: hidden; }
+  .mbar-fill { height: 100%; border-radius: 4px; }
+  .mbar-val { font-size: 12px; font-weight: 600; width: 38px; text-align: right; }
+
+  /* DEP CARDS */
+  .dep-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .dep-card { background: white; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 12px 14px; cursor: pointer; transition: box-shadow 0.15s, transform 0.1s; box-shadow: var(--sombra); }
+  .dep-card:hover { box-shadow: var(--sombra-md); transform: translateY(-1px); }
+  .dep-card.selected { border-color: var(--verde); box-shadow: 0 0 0 2px rgba(37,160,99,0.2); }
+  .dep-name { font-weight: 700; font-size: 13px; margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .dep-bar-row { display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
+  .dep-bar-bg { flex: 1; height: 4px; background: var(--gris-claro); border-radius: 2px; overflow: hidden; }
+  .dep-bar-fill { height: 100%; border-radius: 2px; }
+  .dep-pct { font-size: 12px; font-weight: 700; width: 36px; text-align: right; }
+  .dep-mini { font-size: 11px; color: var(--gris); display: flex; gap: 8px; margin-top: 4px; }
+
+  /* TABS */
+  .tabs { display: flex; gap: 4px; margin-bottom: 14px; border-bottom: 2px solid var(--gris-claro); padding-bottom: 0; overflow-x: auto; white-space: nowrap; }
+  .tab { padding: 8px 16px; font-size: 13px; font-weight: 600; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -2px; color: var(--gris); transition: all 0.15s; flex-shrink: 0; }
+  .tab.active { color: var(--verde); border-bottom-color: var(--verde); }
+  .tab:hover { color: var(--texto); }
+  .section { display: none; }
+  .section.active { display: block; }
+  
+  footer { text-align: center; padding: 20px; font-size: 12px; color: var(--gris); border-top: 1px solid var(--gris-borde); margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div id="tooltip">
+  <div class="tt-name" id="tt-name"></div>
+  <div id="tt-body"></div>
+</div>
+
+<div id="modal-overlay">
+  <div id="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modal-title"></div>
+        <div class="modal-sub" id="modal-sub"></div>
+      </div>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body" id="modal-body"></div>
+  </div>
+</div>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <h1>Tablero Electoral · Regiones y Exterior</h1>
+      <p>Segunda vuelta 2026 · 1169 municipios · 34 departamentos</p>
+    </div>
+    <div class="header-stats">
+      <div class="hstat">
+        <div class="hstat-num" id="h-votos">—</div>
+        <div class="hstat-label">Votos Cepeda</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="h-pct">—</div>
+        <div class="hstat-label">% Nacional</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num" id="h-ganadas">—</div>
+        <div class="hstat-label">Municipios ganados</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="filters">
+    <div class="filter-group">
+      <label>Departamento</label>
+      <select id="f-dep"><option value="">Todos</option></select>
+    </div>
+    <div class="filter-group">
+      <label>Buscar</label>
+      <input type="text" id="f-search" placeholder="municipio…">
+    </div>
+    <div class="filter-group">
+      <label>Estado</label>
+      <select id="f-estado">
+        <option value="">Todos</option>
+        <option value="ganada">Ganados</option>
+        <option value="disputa">En disputa</option>
+        <option value="adversa">Difíciles</option>
+      </select>
+    </div>
+    <button class="btn-clear" onclick="clearFilters()">Limpiar filtros</button>
+    <span class="results-count" id="results-count"></span>
+  </div>
+
+  <div class="tabs">
+    <div class="tab active" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa</div>
+    <div class="tab" data-tab="departamentos" onclick="switchTab('departamentos')">📊 Departamentos</div>
+    <div class="tab" data-tab="municipios" onclick="switchTab('municipios')">📋 Municipios</div>
+    <div class="tab" data-tab="analisis" onclick="switchTab('analisis')">📈 Edad y voto</div>
+    <div class="tab" data-tab="jovenes" onclick="switchTab('jovenes')">📱 Porcentaje Jóvenes</div>
+    <div class="tab" data-tab="volumen" onclick="switchTab('volumen')">🗳️ Volumen</div>
+  </div>
+
+  <div id="tab-mapa" class="section active">
+    <div class="map-card">
+      <div class="section-title">Mapa Electoral Interactivo <span class="pill">Leaflet</span></div>
+      <div class="map-controls">
+        <span style="font-size:12px;color:var(--gris);font-weight:600;margin-right:4px;">Mostrar tamaño por:</span>
+        <button class="map-mode-btn active" data-mode="apoyo" onclick="setMapMode('apoyo')">Densidad (Vol. Total)</button>
+        <button class="map-mode-btn" data-mode="swing" onclick="setMapMode('swing')">Cambio vs 2022</button>
+        <button class="map-mode-btn" data-mode="votos" onclick="setMapMode('votos')">Votos Izquierda</button>
+      </div>
+      <div id="map-div"></div>
+      <div class="map-legend" id="map-legend"></div>
+    </div>
+
+    <div class="two-col" style="margin-bottom:0">
+      <div class="scatter-card">
+        <div class="section-title" style="margin-bottom:8px">Top estratégicos</div>
+        <p style="font-size:12px;color:var(--gris);margin-bottom:10px">Recuperar caídas y cuidar volumen</p>
+        <div id="top-list"></div>
+      </div>
+      <div class="scatter-card">
+        <div class="section-title" style="margin-bottom:8px">Resumen del filtro</div>
+        <div id="resumen-filtro" style="font-size:13px;color:var(--texto-suave);line-height:1.8"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-departamentos" class="section">
+    <div class="section-title">Departamentos <span class="pill" id="dep-count-pill"></span></div>
+    <div class="dep-grid" id="dep-grid"></div>
+  </div>
+
+  <div id="tab-municipios" class="section">
+    <div class="table-card">
+      <div class="table-header"><div class="section-title" style="margin:0">Municipios</div></div>
+      <div style="overflow-x:auto">
+        <table id="muni-table">
+          <thead>
+            <tr>
+              <th onclick="sortTable('municipio')">Municipio ↕</th>
+              <th onclick="sortTable('depto')">Depto ↕</th>
+              <th onclick="sortTable('estado')">Estado ↕</th>
+              <th onclick="sortTable('cepeda')">% Cepeda ↕</th>
+              <th onclick="sortTable('swing')">Swing ↕</th>
+              <th onclick="sortTable('votos_cepeda')">Votos ↕</th>
+              <th onclick="sortTable('joven')">% Jóvenes ↕</th>
+            </tr>
+          </thead>
+          <tbody id="muni-tbody"></tbody>
+        </table>
+      </div>
+      <div class="pagination" id="pagination"></div>
+    </div>
+  </div>
+
+  <div id="tab-analisis" class="section">
+    <div class="scatter-card">
+      <div class="section-title">Edad y voto <span class="pill">Tamaño burbuja = Total Votantes</span></div>
+      <p style="font-size:12px;color:var(--gris);margin-bottom:12px">Cada punto es un municipio. El tamaño refleja el volumen total de votos. Pasa el cursor para ver datos o haz clic para detalles.</p>
+      <svg id="scatter-svg"></svg>
+      <div class="map-legend" style="margin-top:10px">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--verde)"></div> Ganada</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--amarillo)"></div> Disputa</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--rojo)"></div> Adversa</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-jovenes" class="section">
+    <div class="table-card">
+      <div class="table-header" style="background:var(--morado-bg); border-bottom:1px solid #c7d2fe;">
+        <div>
+          <div class="section-title" style="margin:0; color:var(--morado)">Municipios por Porcentaje de Jóvenes</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Priorización de votantes entre 18 y 28 años. <b>Haz clic en los encabezados para ordenar.</b></p>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th style="color:var(--morado)" onclick="sortJovenes('municipio')">Municipio ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('depto')">Depto ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('joven')">% Jóvenes ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('estado')">Estado Actual ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('votos_total')">Votantes Totales ↕</th>
+              <th style="color:var(--morado)" onclick="sortJovenes('votos_cepeda')">Votos Cepeda ↕</th>
+            </tr>
+          </thead>
+          <tbody id="jovenes-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div id="tab-volumen" class="section">
+    <div class="table-card">
+      <div class="table-header" style="background:var(--azul-bg); border-bottom:1px solid #bfdbfe;">
+        <div>
+          <div class="section-title" style="margin:0; color:var(--azul)">Municipios por Volumen Electoral</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Los grandes centros urbanos del filtro. Concentran la mayor masa electoral. <b>Haz clic en los encabezados para ordenar.</b></p>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th style="color:var(--azul)" onclick="sortVolumen('municipio')">Municipio ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('votos_total')">Total Votantes ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('votos_cepeda')">Votos Cepeda ↕</th>
+              <th style="color:var(--azul)">Cepeda vs Otros</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('estado')">Estado Actual ↕</th>
+              <th style="color:var(--azul)" onclick="sortVolumen('margen')">Margen Local ↕</th>
+            </tr>
+          </thead>
+          <tbody id="volumen-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>Fuentes: Registraduría Nacional · DANE · Segunda vuelta 2026</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+<script>
+// ─── DATA ────────────────────────────────────────────
+const D = window.REGIONES_DATA;
+const MUNIS_ARR = Array.isArray(D.municipios) ? D.municipios : Object.values(D.municipios);
+const DEPS = D.departamentos;
+
+// Se eliminó 'orden' de los filtros activos
+let activeFilters = { dep: '', search: '', estado: '' }; 
+let mapMode = 'apoyo';
+let currentPage = 1;
+const PAGE_SIZE = 25;
+
+// Variables para ordenamiento de cada tabla
+let sortCol = 'cepeda'; let sortDir = -1;
+let sortColJoven = 'joven'; let sortDirJoven = -1;
+let sortColVolumen = 'votos_total'; let sortDirVolumen = -1;
+
+let filtered = [];
+let leafletMap;
+let mapCirclesLayer;
+
+// ─── INIT ────────────────────────────────────────────
+function init() {
+  document.getElementById('h-votos').textContent = fmtVotos(D.resumen.votos_cepeda);
+  document.getElementById('h-pct').textContent = D.resumen.cepeda + '%';
+  const ganadas = MUNIS_ARR.filter(m => m.estado === 'ganada').length;
+  document.getElementById('h-ganadas').textContent = ganadas;
+
+  const sel = document.getElementById('f-dep');
+  DEPS.sort((a,b) => a.depto.localeCompare(b.depto)).forEach(d => {
+    const o = document.createElement('option');
+    o.value = d.dep;
+    o.textContent = d.depto;
+    sel.appendChild(o);
+  });
+
+  // Event Listeners (sin f-orden)
+  ['f-dep','f-estado'].forEach(id => {
+    document.getElementById(id).addEventListener('change', onFilter);
+  });
+  document.getElementById('f-search').addEventListener('input', onFilter);
+
+  applyFilters(true);
+}
+
+// ─── FILTER ──────────────────────────────────────────
+function onFilter() {
+  activeFilters.dep = document.getElementById('f-dep').value;
+  activeFilters.search = document.getElementById('f-search').value.toLowerCase().trim();
+  activeFilters.estado = document.getElementById('f-estado').value;
+  currentPage = 1;
+  applyFilters(true);
+}
+
+function clearFilters() {
+  document.getElementById('f-dep').value = '';
+  document.getElementById('f-search').value = '';
+  document.getElementById('f-estado').value = '';
+  activeFilters = { dep:'', search:'', estado:'' };
+  currentPage = 1;
+  applyFilters(true);
+}
+
+function applyFilters(zoomToBounds = false) {
+  filtered = MUNIS_ARR.filter(m => {
+    if (activeFilters.dep && m.dep !== activeFilters.dep) return false;
+    if (activeFilters.estado && m.estado !== activeFilters.estado) return false;
+    if (activeFilters.search && !m.municipio.toLowerCase().includes(activeFilters.search) && !m.depto.toLowerCase().includes(activeFilters.search)) return false;
+    return true;
+  });
+
+  // Ordenamiento base implícito (Prioridad Estratégica) para la carga de datos iniciales
+  filtered.sort((a,b) => {
+    const estadoScore = { disputa: 0, ganada: 1, adversa: 2 };
+    const es = (estadoScore[a.estado]||2) - (estadoScore[b.estado]||2);
+    if (es !== 0) return es;
+    return Math.abs(b.swing||0) - Math.abs(a.swing||0);
+  });
+
+  document.getElementById('results-count').textContent = `${filtered.length} municipios`;
+
+  drawMap(zoomToBounds);
+  drawScatter();
+  drawTopList();
+  drawTable();
+  drawFocoJoven();
+  drawAltoImpacto(); 
+  drawResumen();
+  drawDepGrid();
+}
+
+function sortTable(col) {
+  if (sortCol === col) sortDir *= -1;
+  else { sortCol = col; sortDir = -1; }
+  filtered.sort((a,b) => {
+    let av = a[col], bv = b[col];
+    if (typeof av === 'string') return sortDir * av.localeCompare(bv||'');
+    return sortDir * ((av||0) - (bv||0));
+  });
+  currentPage = 1;
+  drawTable();
+}
+
+// Lógica de ordenamiento para la tabla JÓVENES
+function sortJovenes(col) {
+  if (sortColJoven === col) sortDirJoven *= -1;
+  else { sortColJoven = col; sortDirJoven = -1; }
+  drawFocoJoven();
+}
+
+// Lógica de ordenamiento para la tabla VOLUMEN
+function sortVolumen(col) {
+  if (sortColVolumen === col) sortDirVolumen *= -1;
+  else { sortColVolumen = col; sortDirVolumen = -1; }
+  drawAltoImpacto();
+}
+
+// ─── LEAFLET MAP ─────────────────────────────────────
+const COL_GANADA = '#1a7a4a';
+const COL_DISPUTA = '#d4a017';
+const COL_ADVERSA = '#c0392b';
+
+function colorByEstadoStr(e) {
+  if (e === 'ganada') return COL_GANADA;
+  if (e === 'disputa') return COL_DISPUTA;
+  return COL_ADVERSA;
+}
+
+function initLeafletMap() {
+  leafletMap = L.map('map-div').setView([4.5709, -74.2973], 5);
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
+    subdomains: 'abcd',
+    maxZoom: 19
+  }).addTo(leafletMap);
+  mapCirclesLayer = L.layerGroup().addTo(leafletMap);
+}
+
+function setMapMode(mode) {
+  mapMode = mode;
+  document.querySelectorAll('.map-mode-btn').forEach(b => {
+    b.classList.toggle('active', b.dataset.mode === mode);
+  });
+  drawMap(false);
+}
+
+function drawMap(zoomToBounds = false) {
+  if (!leafletMap) initLeafletMap();
+  mapCirclesLayer.clearLayers();
+
+  const withCoords = filtered.filter(m => m.lat && m.lon);
+  if (withCoords.length === 0) return;
+
+  const maxVotosCepeda = Math.max(1, ...withCoords.map(m => m.votos_cepeda||0));
+  const maxVotosTotalMap = Math.max(1, ...withCoords.map(m => m.votos_total||0));
+
+  function getR(m) {
+    if (mapMode === 'votos') return 4 + Math.sqrt((m.votos_cepeda||0)/maxVotosCepeda) * 20;
+    if (mapMode === 'swing') return 5 + Math.min(Math.abs(m.swing||0)/30, 1) * 15;
+    // NUEVO: En modo 'apoyo' el tamaño depende de los VOTOS TOTALES de ese municipio
+    return 4 + Math.sqrt((m.votos_total||0)/maxVotosTotalMap) * 20;
+  }
+  
+  function getColor(m) {
+    if (mapMode === 'swing') {
+      const s = m.swing || 0;
+      if (s > 3) return COL_GANADA;
+      if (s < -3) return COL_ADVERSA;
+      return COL_DISPUTA;
+    }
+    return colorByEstadoStr(m.estado);
+  }
+
+  const sorted = [...withCoords].sort((a,b) => getR(b) - getR(a));
+
+  sorted.forEach(m => {
+    const c = getColor(m);
+    const r = getR(m);
+    
+    const circle = L.circleMarker([m.lat, m.lon], {
+      radius: r,
+      fillColor: c,
+      color: 'white',
+      weight: 1,
+      opacity: 1,
+      fillOpacity: 0.75
+    });
+
+    const swingSign = (m.swing||0) >= 0 ? '+' : '';
+    const tooltipHtml = `
+      <div style="font-family:sans-serif;font-size:12px;min-width:140px;">
+        <div style="font-weight:bold;margin-bottom:4px;font-size:13px;border-bottom:1px solid #ddd;padding-bottom:4px;">${m.municipio}</div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="color:#666">${m.depto}</span>
+          <span style="font-weight:bold;color:${colorByEstadoStr(m.estado)}">${estadoLabel(m.estado)}</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="color:#666">% Cepeda:</span>
+          <span style="font-weight:bold">${m.cepeda}%</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-bottom:2px">
+          <span style="color:#666">Swing:</span>
+          <span style="font-weight:bold;color:${(m.swing||0)>=0?COL_GANADA:COL_ADVERSA}">${swingSign}${m.swing||0} pts</span>
+        </div>
+        <div style="display:flex;justify-content:space-between;">
+          <span style="color:#666">Votos:</span>
+          <span style="font-weight:bold">${fmtVotos(m.votos_cepeda)}</span>
+        </div>
+        <div style="text-align:center;font-size:10px;color:#999;margin-top:5px;">Clic para detalles</div>
+      </div>
+    `;
+
+    circle.bindTooltip(tooltipHtml, { direction: 'top', offset: [0, -10] });
+    circle.on('click', () => openModal(m.slug));
+    circle.addTo(mapCirclesLayer);
+  });
+
+  if (zoomToBounds && withCoords.length > 0) {
+    const bounds = L.latLngBounds(withCoords.map(m => [m.lat, m.lon]));
+    leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 11 }); 
+  }
+
+  const leg = document.getElementById('map-legend');
+  if (mapMode === 'apoyo' || mapMode === 'votos') {
+    leg.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_GANADA}"></div> Ganada</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_DISPUTA}"></div> Disputa</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_ADVERSA}"></div> Adversa</div>
+    `;
+  } else {
+    leg.innerHTML = `
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_GANADA}"></div> Subió &gt;3pts</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_DISPUTA}"></div> Estable</div>
+      <div class="legend-item"><div class="legend-dot" style="background:${COL_ADVERSA}"></div> Cayó &gt;3pts</div>
+    `;
+  }
+}
+
+// ─── SCATTER (RADIO POR VOTOS TOTALES) ─────────
+function drawScatter() {
+  const svg = document.getElementById('scatter-svg');
+  const bbox = svg.getBoundingClientRect();
+  const W = bbox.width || 460, H = 320; 
+  svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+
+  const withData = filtered.filter(m => m.joven !== null && m.cepeda !== null);
+  if (withData.length === 0) { svg.innerHTML = '<text x="50%" y="50%" text-anchor="middle" fill="#999" font-size="13">Sin datos para mostrar</text>'; return; }
+
+  const pad = { l:40, r:16, t:20, b:35 };
+  const iW = W - pad.l - pad.r, iH = H - pad.t - pad.b;
+
+  const jovens = withData.map(m => m.joven);
+  const ceps = withData.map(m => m.cepeda);
+  const minJ = Math.max(0, Math.min(...jovens)-2), maxJ = Math.min(100, Math.max(...jovens)+2);
+  const minC = Math.max(0, Math.min(...ceps)-5), maxC = Math.min(100, Math.max(...ceps)+5);
+  
+  // Buscar el máximo total de votos del filtro para escalar las burbujas
+  const maxVotosTotal = Math.max(1, ...withData.map(m => m.votos_total || 0));
+
+  function px(j) { return pad.l + (j-minJ)/(maxJ-minJ)*iW; }
+  function py(c) { return pad.t + iH - (c-minC)/(maxC-minC)*iH; }
+
+  let html = '';
+
+  for (let v=0; v<=100; v+=25) {
+    if (v >= minC && v <= maxC) {
+      const y = py(v);
+      html += `<line x1="${pad.l}" y1="${y}" x2="${W-pad.r}" y2="${y}" stroke="#e5e7eb" stroke-width="1"/>`;
+      html += `<text x="${pad.l-4}" y="${y+4}" text-anchor="end" font-size="9" fill="#9ca3af">${v}%</text>`;
+    }
+    if (v >= minJ && v <= maxJ) {
+      const x = px(v);
+      html += `<line x1="${x}" y1="${pad.t}" x2="${x}" y2="${H-pad.b}" stroke="#e5e7eb" stroke-width="1"/>`;
+      html += `<text x="${x}" y="${H-pad.b+14}" text-anchor="middle" font-size="9" fill="#9ca3af">${v}%</text>`;
+    }
+  }
+
+  html += `<text x="${pad.l + iW/2}" y="${H-2}" text-anchor="middle" font-size="11" fill="#6b7280">% Votantes jóvenes</text>`;
+  html += `<text x="10" y="${pad.t + iH/2}" text-anchor="middle" font-size="11" fill="#6b7280" transform="rotate(-90,10,${pad.t+iH/2})">% Cepeda</text>`;
+
+  // Ordenar de mayor a menor votos_total para que las burbujas pequeñas queden encima de las grandes
+  const sortedData = [...withData].sort((a,b) => (b.votos_total||0) - (a.votos_total||0));
+
+  sortedData.forEach(m => {
+    const x = px(m.joven), y = py(m.cepeda);
+    const c = colorByEstadoStr(m.estado);
+    // Calcular el radio dinámico según la cantidad de votantes
+    const r = 3 + Math.sqrt((m.votos_total || 0) / maxVotosTotal) * 18; 
+    
+    html += `<circle class="scatter-dot" cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" r="${r.toFixed(1)}" fill="${c}" fill-opacity="0.65" stroke="white" stroke-width="0.8"
+      onmouseenter="showTip(event,'${escHtml(m.municipio)}','${escHtml(m.depto)}',${m.cepeda},${m.votos_cepeda},${m.swing||0},'${m.estado}')"
+      onmouseleave="hideTip()"
+      onclick="openModal('${m.slug}')"></circle>`;
+  });
+
+  svg.innerHTML = html;
+}
+
+// ─── FOCO JOVEN (CON ORDENAMIENTO) ───────
+function drawFocoJoven() {
+  const tbody = document.getElementById('jovenes-tbody');
+  
+  let conJovenes = filtered.filter(m => m.joven !== null && m.joven !== undefined);
+  
+  // Ordenamiento dinámico
+  conJovenes.sort((a,b) => {
+    let av = a[sortColJoven], bv = b[sortColJoven];
+    if (typeof av === 'string') return sortDirJoven * av.localeCompare(bv||'');
+    return sortDirJoven * ((av||0) - (bv||0));
+  });
+
+  const topList = conJovenes.slice(0, 50);
+
+  if (topList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No hay datos de jóvenes en este filtro</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = topList.map(m => {
+    return `
+      <tr onclick="openModal('${m.slug}')">
+        <td><div class="td-muni">${m.municipio}</div></td>
+        <td><div class="td-depto">${m.depto}</div></td>
+        <td><b style="color:var(--morado);font-size:14px">${m.joven}%</b></td>
+        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td><b>${fmtVotos(m.votos_total)}</b></td>
+        <td>${fmtVotos(m.votos_cepeda)}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ─── ALTO IMPACTO (VOLUMEN Y CEPEDA VS OTROS) ────────
+function drawAltoImpacto() {
+  const tbody = document.getElementById('volumen-tbody');
+  
+  let list = [...filtered];
+  
+  // Ordenamiento dinámico
+  list.sort((a,b) => {
+    let av = a[sortColVolumen], bv = b[sortColVolumen];
+    if (typeof av === 'string') return sortDirVolumen * av.localeCompare(bv||'');
+    return sortDirVolumen * ((av||0) - (bv||0));
+  });
+
+  const topList = list.slice(0, 50);
+
+  if (topList.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No hay datos en este filtro</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = topList.map(m => {
+    const margenSign = (m.margen||0) >= 0 ? '+' : '';
+    const margenColor = (m.margen||0) >= 0 ? 'var(--verde)' : 'var(--rojo)';
+    
+    // Calcular votos de Otros y porcentajes para la barra
+    const votosOtros = Math.max(0, (m.votos_total || 0) - (m.votos_cepeda || 0));
+    const pctC = m.votos_total > 0 ? ((m.votos_cepeda / m.votos_total) * 100).toFixed(1) : 0;
+    const pctO = (100 - pctC).toFixed(1);
+
+    return `
+      <tr onclick="openModal('${m.slug}')">
+        <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
+        <td><b style="color:var(--azul);font-size:14px">${fmtVotos(m.votos_total)}</b></td>
+        <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td style="min-width:130px;">
+          <div style="font-size:11px;color:var(--texto-suave);margin-bottom:3px;display:flex;justify-content:space-between;">
+            <span><b>Cep:</b> ${fmtVotos(m.votos_cepeda)}</span>
+            <span><b>Otr:</b> ${fmtVotos(votosOtros)}</span>
+          </div>
+          <div style="display:flex; height:6px; width:100%; border-radius:3px; overflow:hidden;">
+            <div style="width:${pctC}%; background:var(--verde);"></div>
+            <div style="width:${pctO}%; background:var(--rojo);"></div>
+          </div>
+        </td>
+        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td><b style="color:${margenColor}">${margenSign}${m.margen||0} pts</b></td>
+      </tr>
+    `;
+  }).join('');
+}
+
+// ─── TOP LIST ────────────────────────────────────────
+function drawTopList() {
+  const container = document.getElementById('top-list');
+  const top = [...filtered]
+    .sort((a,b) => {
+      if (a.estado === 'disputa' && b.estado !== 'disputa') return -1;
+      if (b.estado === 'disputa' && a.estado !== 'disputa') return 1;
+      if (a.estado === 'ganada' && b.estado !== 'ganada') return -1;
+      if (b.estado === 'ganada' && a.estado !== 'ganada') return 1;
+      return (b.votos_cepeda||0) - (a.votos_cepeda||0);
+    }).slice(0, 15);
+
+  container.innerHTML = top.map((m, i) => `
+    <div class="top-item" onclick="openModal('${m.slug}')">
+      <div class="top-rank">${i+1}</div>
+      <div class="top-info">
+        <div class="top-name">${m.municipio}</div>
+        <div class="top-dep">${m.depto}</div>
+      </div>
+      <span class="top-badge badge-${m.estado}">${estadoLabel(m.estado)}</span>
+      <div class="top-votos">${fmtVotos(m.votos_cepeda)}</div>
+    </div>
+  `).join('');
+}
+
+// ─── RESUMEN ─────────────────────────────────────────
+function drawResumen() {
+  const el = document.getElementById('resumen-filtro');
+  const total = filtered.length;
+  const ganadas = filtered.filter(m => m.estado === 'ganada').length;
+  const disputa = filtered.filter(m => m.estado === 'disputa').length;
+  const adversas = filtered.filter(m => m.estado === 'adversa').length;
+  const totalVotos = filtered.reduce((s,m) => s+(m.votos_cepeda||0), 0);
+  const totalVotosTotal = filtered.reduce((s,m) => s+(m.votos_total||0), 0);
+  const pct = totalVotosTotal > 0 ? (totalVotos/totalVotosTotal*100).toFixed(1) : '—';
+  const caidas = filtered.filter(m => (m.swing||0) < -3).length;
+  const subidas = filtered.filter(m => (m.swing||0) > 3).length;
+
+  el.innerHTML = `
+    <div style="margin-bottom:8px"><b>${total}</b> municipios en el filtro actual</div>
+    <div>✅ Ganados: <b>${ganadas}</b></div>
+    <div>⚡ En disputa: <b>${disputa}</b></div>
+    <div>❌ Difíciles: <b>${adversas}</b></div>
+    <div style="margin-top:8px">🗳 Votos Cepeda: <b>${fmtVotos(totalVotos)}</b></div>
+    <div>% en el filtro: <b>${pct}%</b></div>
+    <div style="margin-top:8px">📉 Con caída &gt;3pts: <b>${caidas}</b></div>
+    <div>📈 Con subida &gt;3pts: <b>${subidas}</b></div>
+  `;
+}
+
+// ─── DEP GRID ────────────────────────────────────────
+function drawDepGrid() {
+  const el = document.getElementById('dep-grid');
+  const pill = document.getElementById('dep-count-pill');
+  const selectedDep = activeFilters.dep;
+
+  const depEnFiltro = new Set(filtered.map(m => m.dep));
+  const deps = DEPS.filter(d => !activeFilters.dep || d.dep === activeFilters.dep || depEnFiltro.has(d.dep));
+  pill.textContent = `${deps.length} departamentos`;
+
+  el.innerHTML = deps.sort((a,b) => b.votos_cepeda - a.votos_cepeda).map(d => `
+    <div class="dep-card ${selectedDep === d.dep ? 'selected':''}" onclick="selectDep('${d.dep}')">
+      <div class="dep-name">${d.depto}</div>
+      <div class="dep-bar-row">
+        <div class="dep-bar-bg"><div class="dep-bar-fill" style="width:${Math.min(d.cepeda,100)}%;background:${d.cepeda>=50?COL_GANADA:COL_ADVERSA}"></div></div>
+        <div class="dep-pct" style="color:${d.cepeda>=50?COL_GANADA:COL_ADVERSA}">${d.cepeda}%</div>
+      </div>
+      <div class="dep-mini">
+        <span style="color:${COL_GANADA}">✅${d.ganadas}</span>
+        <span style="color:${COL_DISPUTA}">⚡${d.disputa}</span>
+        <span style="color:${COL_ADVERSA}">❌${d.adversas}</span>
+        <span>${fmtVotos(d.votos_cepeda)} vts</span>
+      </div>
+      ${d.joven !== null ? `<div class="dep-mini"><span>👤 ${d.joven}% jóvenes</span></div>` : ''}
+    </div>
+  `).join('');
+}
+
+function selectDep(dep) {
+  const sel = document.getElementById('f-dep');
+  if (activeFilters.dep === dep) {
+    sel.value = '';
+    activeFilters.dep = '';
+  } else {
+    sel.value = dep;
+    activeFilters.dep = dep;
+  }
+  currentPage = 1;
+  applyFilters(true);
+}
+
+// ─── TABLE ───────────────────────────────────────────
+function drawTable() {
+  const tbody = document.getElementById('muni-tbody');
+  const start = (currentPage-1) * PAGE_SIZE;
+  const page = filtered.slice(start, start + PAGE_SIZE);
+
+  tbody.innerHTML = page.map(m => {
+    const barW = Math.min(m.cepeda, 100);
+    const barColor = colorByEstadoStr(m.estado);
+    const swingClass = (m.swing||0) >= 0 ? 'swing-pos' : 'swing-neg';
+    const swingSign = (m.swing||0) >= 0 ? '+' : '';
+    return `
+      <tr onclick="openModal('${m.slug}')">
+        <td><div class="td-muni">${m.municipio}</div></td>
+        <td><div class="td-depto">${m.depto}</div></td>
+        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td>
+          <div class="pct-bar-wrap">
+            <b>${m.cepeda}%</b>
+            <div class="pct-bar-bg"><div class="pct-bar-fill" style="width:${barW}%;background:${barColor}"></div></div>
+          </div>
+        </td>
+        <td><span class="${swingClass}">${swingSign}${m.swing||'—'} pts</span></td>
+        <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td>${m.joven !== null ? m.joven+'%' : '—'}</td>
+      </tr>
+    `;
+  }).join('');
+
+  drawPagination();
+}
+
+function drawPagination() {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  const el = document.getElementById('pagination');
+  if (totalPages <= 1) { el.innerHTML = ''; return; }
+
+  let html = `<button class="page-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>‹ Ant</button>`;
+  const pages = new Set([1, totalPages, currentPage, currentPage-1, currentPage+1].filter(p => p>=1 && p<=totalPages));
+  const sorted = [...pages].sort((a,b)=>a-b);
+  let prev = null;
+  sorted.forEach(p => {
+    if (prev && p - prev > 1) html += `<span style="color:var(--gris);padding:0 4px">…</span>`;
+    html += `<button class="page-btn ${p===currentPage?'active':''}" onclick="goPage(${p})">${p}</button>`;
+    prev = p;
+  });
+
+  html += `<button class="page-btn" onclick="goPage(${currentPage+1})" ${currentPage===totalPages?'disabled':''}>Sig ›</button>`;
+  html += `<span style="font-size:11px;color:var(--gris);margin-left:8px;">${filtered.length} municipios · Pág ${currentPage}/${totalPages}</span>`;
+  el.innerHTML = html;
+}
+
+function goPage(p) {
+  const totalPages = Math.ceil(filtered.length / PAGE_SIZE);
+  if (p < 1 || p > totalPages) return;
+  currentPage = p;
+  drawTable();
+  document.getElementById('tab-municipios').scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+// ─── MODAL ───────────────────────────────────────────
+function openModal(slug) {
+  const m = MUNIS_ARR.find(x => x.slug === slug);
+  if (!m) return;
+
+  document.getElementById('modal-title').textContent = m.municipio;
+  document.getElementById('modal-sub').textContent = `${m.depto} · ${estadoLabel(m.estado)}`;
+
+  const cepedaPct = m.cepeda || 0;
+  const derechaPct = m.derecha || (100 - cepedaPct).toFixed(1);
+  const swingSign = (m.swing||0) >= 0 ? '+' : '';
+
+  document.getElementById('modal-body').innerHTML = `
+    <div class="modal-stats">
+      <div class="mstat">
+        <div class="mstat-num" style="color:${colorByEstadoStr(m.estado)}">${cepedaPct}%</div>
+        <div class="mstat-label">% Cepeda</div>
+      </div>
+      <div class="mstat">
+        <div class="mstat-num" style="color:${(m.swing||0)>=0?COL_GANADA:COL_ADVERSA}">${swingSign}${m.swing||0} pts</div>
+        <div class="mstat-label">Swing vs 2022</div>
+      </div>
+      <div class="mstat">
+        <div class="mstat-num">${fmtVotos(m.votos_cepeda)}</div>
+        <div class="mstat-label">Votos Cepeda</div>
+      </div>
+    </div>
+
+    <div class="modal-bars">
+      <div class="mbar-row">
+        <div class="mbar-label" style="font-weight:600;color:${COL_GANADA}">Cepeda</div>
+        <div class="mbar-bg"><div class="mbar-fill" style="width:${cepedaPct}%;background:${COL_GANADA}"></div></div>
+        <div class="mbar-val">${cepedaPct}%</div>
+      </div>
+      <div class="mbar-row">
+        <div class="mbar-label" style="font-weight:600;color:${COL_ADVERSA}">Derecha</div>
+        <div class="mbar-bg"><div class="mbar-fill" style="width:${derechaPct}%;background:${COL_ADVERSA}"></div></div>
+        <div class="mbar-val">${derechaPct}%</div>
+      </div>
+      ${m.joven !== null && m.joven !== undefined ? `
+      <div class="mbar-row">
+        <div class="mbar-label" style="color:var(--texto-suave)">Jóvenes</div>
+        <div class="mbar-bg"><div class="mbar-fill" style="width:${m.joven}%;background:var(--morado)"></div></div>
+        <div class="mbar-val">${m.joven}%</div>
+      </div>` : ''}
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;font-size:12px;color:var(--texto-suave);margin-bottom:14px;border-top:1px solid #eee;padding-top:10px;">
+      <div>📊 Total votos: <b>${fmtVotos(m.votos_total)}</b></div>
+      <div>🗳 Puestos de votación: <b>${m.n_puestos||'—'}</b></div>
+      <div>📉 Margen sobre derecha: <b style="color:${(m.margen||0)>=0?COL_GANADA:COL_ADVERSA}">${(m.margen||0)>=0?'+':''}${m.margen||0} pts</b></div>
+      ${m.petro22 !== undefined ? `<div>🕐 Izquierda en 2022: <b>${m.petro22}%</b></div>` : ''}
+    </div>
+
+    ${m.texto ? `<div style="background:var(--gris-claro);border-radius:8px;padding:12px 14px;font-size:13px;color:var(--texto-suave);line-height:1.6;font-style:italic;">${m.texto}</div>` : ''}
+  `;
+
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modal-overlay').classList.remove('open');
+}
+document.getElementById('modal-overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ─── TOOLTIP ─────────────────────────────────────────
+function showTip(e, name, dep, cep, votos, swing, estado) {
+  const tt = document.getElementById('tooltip');
+  const swingSign = swing >= 0 ? '+' : '';
+  document.getElementById('tt-name').textContent = name;
+  document.getElementById('tt-body').innerHTML = `
+    <div class="tt-row"><span>${dep}</span><span class="tt-val" style="color:${colorByEstadoStr(estado)}">${estadoLabel(estado)}</span></div>
+    <div class="tt-row"><span>% Cepeda</span><span class="tt-val">${cep}%</span></div>
+    <div class="tt-row"><span>Swing</span><span class="tt-val" style="color:${swing>=0?COL_GANADA:COL_ADVERSA}">${swingSign}${swing} pts</span></div>
+    <div class="tt-row"><span>Votos</span><span class="tt-val">${fmtVotos(votos)}</span></div>
+  `;
+  tt.style.display = 'block';
+  moveTip(e);
+}
+function moveTip(e) {
+  const tt = document.getElementById('tooltip');
+  const x = e.clientX + 14, y = e.clientY - 10;
+  tt.style.left = Math.min(x, window.innerWidth - 230) + 'px';
+  tt.style.top = Math.min(y, window.innerHeight - 140) + 'px';
+}
+function hideTip() { document.getElementById('tooltip').style.display = 'none'; }
+
+document.addEventListener('mousemove', e => {
+  if (document.getElementById('tooltip').style.display === 'block') moveTip(e);
+});
+
+// ─── TABS ────────────────────────────────────────────
+function switchTab(name) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.tab === name));
+  document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'tab-'+name));
+  
+  if (name === 'mapa' && leafletMap) {
+      leafletMap.invalidateSize(); 
+  }
+  if (name === 'analisis') drawScatter();
+  if (name === 'municipios') drawTable();
+}
+
+// ─── UTILS ───────────────────────────────────────────
+function fmtVotos(n) {
+  if (!n) return '0';
+  if (n >= 1000000) return (n/1000000).toFixed(1) + 'M';
+  if (n >= 1000) return (n/1000).toFixed(0) + 'K';
+  return String(n);
+}
+function estadoLabel(e) {
+  if (e === 'ganada') return 'Ganada';
+  if (e === 'disputa') return 'Disputa';
+  return 'Difícil';
+}
+function escHtml(s) {
+  return (s||'').replace(/'/g, "\\'").replace(/"/g,'&quot;');
+}
+
+// ─── START ───────────────────────────────────────────
+window.onload = function() {
+  if(window.REGIONES_DATA) {
+    init();
+  } else {
+    console.error("El archivo data.js no cargó correctamente o no tiene la variable window.REGIONES_DATA");
+  }
+};
+</script>
+</body>
+</html>
