@@ -5,8 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Regiones y Exterior · Segunda Vuelta 2026</title>
 
+<!-- LEAFLET CSS -->
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
 
+<!-- ARCHIVO DE DATOS -->
 <script src="data.js"></script>
 
 <style>
@@ -18,6 +20,8 @@
     --rojo-bg: #fdecea;
     --amarillo: #d4a017;
     --amarillo-bg: #fef9e7;
+    --morado: #6366f1;
+    --morado-bg: #e0e7ff;
     --gris: #6b7280;
     --gris-claro: #f3f4f6;
     --gris-borde: #e5e7eb;
@@ -31,28 +35,11 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    font-family: var(--fuente);
-    color: var(--texto);
-    background: #f8faf9;
-    font-size: 14px;
-    line-height: 1.5;
-  }
+  body { font-family: var(--fuente); color: var(--texto); background: #f8faf9; font-size: 14px; line-height: 1.5; }
 
   /* HEADER */
-  header {
-    background: var(--verde);
-    color: white;
-    padding: 16px 20px;
-  }
-  header .header-inner {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
+  header { background: var(--verde); color: white; padding: 16px 20px; }
+  header .header-inner { max-width: 1100px; margin: 0 auto; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
   header h1 { font-size: 18px; font-weight: 700; letter-spacing: -0.3px; }
   header p { font-size: 13px; opacity: 0.85; margin-top: 2px; }
   .header-stats { margin-left: auto; display: flex; gap: 20px; flex-wrap: wrap; }
@@ -64,28 +51,13 @@
   main { max-width: 1100px; margin: 0 auto; padding: 20px 16px 40px; }
 
   /* FILTERS */
-  .filters {
-    background: white;
-    border: 1px solid var(--gris-borde);
-    border-radius: 10px;
-    padding: 14px 16px;
-    margin-bottom: 16px;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-    align-items: center;
-    box-shadow: var(--sombra);
-  }
+  .filters { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 14px 16px; margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; box-shadow: var(--sombra); }
   .filters label { font-size: 12px; font-weight: 600; color: var(--texto-suave); text-transform: uppercase; letter-spacing: 0.4px; }
-  select, input[type="text"] {
-    border: 1px solid var(--gris-borde); border-radius: 6px; padding: 6px 10px; font-size: 13px; font-family: var(--fuente); color: var(--texto); background: white; outline: none;
-  }
+  select, input[type="text"] { border: 1px solid var(--gris-borde); border-radius: 6px; padding: 6px 10px; font-size: 13px; font-family: var(--fuente); color: var(--texto); background: white; outline: none; }
   select:focus, input:focus { border-color: var(--verde-claro); box-shadow: 0 0 0 2px rgba(37,160,99,0.15); }
   input[type="text"] { width: 180px; }
   .filter-group { display: flex; align-items: center; gap: 6px; }
-  .btn-clear {
-    background: none; border: 1px solid var(--gris-borde); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--gris); cursor: pointer; margin-left: auto;
-  }
+  .btn-clear { background: none; border: 1px solid var(--gris-borde); border-radius: 6px; padding: 6px 12px; font-size: 12px; color: var(--gris); cursor: pointer; margin-left: auto; }
   .btn-clear:hover { background: var(--gris-claro); }
   .results-count { font-size: 12px; color: var(--gris); margin-left: 4px; white-space: nowrap; }
 
@@ -94,34 +66,18 @@
   .section-title span.pill { font-size: 11px; font-weight: 600; background: var(--gris-claro); color: var(--gris); padding: 2px 8px; border-radius: 20px; }
 
   /* LEAFLET MAP */
-  .map-card {
-    background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: var(--sombra);
-  }
+  .map-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; margin-bottom: 16px; box-shadow: var(--sombra); }
   .map-controls { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; align-items: center; }
-  .map-mode-btn {
-    padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid var(--gris-borde); border-radius: 20px; background: white; cursor: pointer; color: var(--gris); transition: all 0.15s;
-  }
+  .map-mode-btn { padding: 5px 12px; font-size: 12px; font-weight: 600; border: 1px solid var(--gris-borde); border-radius: 20px; background: white; cursor: pointer; color: var(--gris); transition: all 0.15s; }
   .map-mode-btn.active { background: var(--verde); border-color: var(--verde); color: white; }
-  
-  #map-div {
-    width: 100%;
-    height: 480px; /* Un poco más alto para verse bien */
-    background: #e5e5e5;
-    border-radius: 8px;
-    z-index: 1; /* Importante para que el modal pase por encima */
-  }
-
+  #map-div { width: 100%; height: 480px; background: #e5e5e5; border-radius: 8px; z-index: 1; }
   .map-legend { display: flex; gap: 16px; margin-top: 10px; flex-wrap: wrap; }
   .legend-item { display: flex; align-items: center; gap: 5px; font-size: 11px; color: var(--texto-suave); }
   .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 
   /* GRID */
   .two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
-  @media(max-width: 700px) {
-    .two-col { grid-template-columns: 1fr; }
-    input[type="text"] { width: 140px; }
-    .header-stats { margin-left: 0; }
-  }
+  @media(max-width: 700px) { .two-col { grid-template-columns: 1fr; } input[type="text"] { width: 140px; } .header-stats { margin-left: 0; } }
 
   /* SCATTER */
   .scatter-card { background: white; border: 1px solid var(--gris-borde); border-radius: 10px; padding: 16px; box-shadow: var(--sombra); }
@@ -129,10 +85,8 @@
   .scatter-dot { cursor: pointer; }
   .scatter-dot:hover { opacity: 0.7; }
 
-  /* TOOLTIP (Solo para el gráfico scatter) */
-  #tooltip {
-    position: fixed; background: white; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 10px 14px; font-size: 12px; box-shadow: var(--sombra-md); pointer-events: none; z-index: 9999; display: none; max-width: 220px;
-  }
+  /* TOOLTIP SVG */
+  #tooltip { position: fixed; background: white; border: 1px solid var(--gris-borde); border-radius: 8px; padding: 10px 14px; font-size: 12px; box-shadow: var(--sombra-md); pointer-events: none; z-index: 9999; display: none; max-width: 220px; }
   #tooltip .tt-name { font-weight: 700; font-size: 13px; margin-bottom: 4px; }
   #tooltip .tt-row { display: flex; justify-content: space-between; gap: 12px; color: var(--texto-suave); }
   #tooltip .tt-val { font-weight: 600; color: var(--texto); }
@@ -230,6 +184,7 @@
   <div id="tt-body"></div>
 </div>
 
+<!-- MODAL -->
 <div id="modal-overlay">
   <div id="modal">
     <div class="modal-header">
@@ -267,6 +222,7 @@
 </header>
 
 <main>
+  <!-- FILTERS -->
   <div class="filters">
     <div class="filter-group">
       <label>Departamento</label>
@@ -299,13 +255,17 @@
     <span class="results-count" id="results-count"></span>
   </div>
 
+  <!-- TABS -->
   <div class="tabs">
     <div class="tab active" data-tab="mapa" onclick="switchTab('mapa')">🗺 Mapa</div>
     <div class="tab" data-tab="departamentos" onclick="switchTab('departamentos')">📊 Departamentos</div>
     <div class="tab" data-tab="municipios" onclick="switchTab('municipios')">📋 Municipios</div>
     <div class="tab" data-tab="analisis" onclick="switchTab('analisis')">📈 Edad y voto</div>
+    <!-- NUEVA PESTAÑA -->
+    <div class="tab" data-tab="jovenes" onclick="switchTab('jovenes')">📱 Foco Joven</div>
   </div>
 
+  <!-- TAB: MAPA -->
   <div id="tab-mapa" class="section active">
     <div class="map-card">
       <div class="section-title">Mapa Electoral Interactivo <span class="pill">Leaflet</span></div>
@@ -332,11 +292,13 @@
     </div>
   </div>
 
+  <!-- TAB: DEPARTAMENTOS -->
   <div id="tab-departamentos" class="section">
     <div class="section-title">Departamentos <span class="pill" id="dep-count-pill"></span></div>
     <div class="dep-grid" id="dep-grid"></div>
   </div>
 
+  <!-- TAB: MUNICIPIOS -->
   <div id="tab-municipios" class="section">
     <div class="table-card">
       <div class="table-header"><div class="section-title" style="margin:0">Municipios</div></div>
@@ -360,6 +322,7 @@
     </div>
   </div>
 
+  <!-- TAB: ANÁLISIS -->
   <div id="tab-analisis" class="section">
     <div class="scatter-card">
       <div class="section-title">Edad y voto <span class="pill">% jóvenes vs % Cepeda por municipio</span></div>
@@ -373,20 +336,46 @@
     </div>
   </div>
 
+  <!-- NUEVA TAB: FOCO JOVEN -->
+  <div id="tab-jovenes" class="section">
+    <div class="table-card">
+      <div class="table-header" style="background:var(--morado-bg); border-bottom:1px solid #c7d2fe;">
+        <div>
+          <div class="section-title" style="margin:0; color:var(--morado)">Top 20: Municipios más Jóvenes del Filtro</div>
+          <p style="font-size:12px;color:var(--texto-suave);margin-top:2px">Priorización para estrategias digitales (TikTok, Instagram), agenda universitaria y voto de opinión.</p>
+        </div>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>Rango</th>
+              <th>Municipio</th>
+              <th>% Jóvenes</th>
+              <th>Estado Actual</th>
+              <th>Votos Cepeda</th>
+              <th>Estrategia Sugerida</th>
+            </tr>
+          </thead>
+          <tbody id="jovenes-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
 </main>
 
 <footer>Fuentes: Registraduría Nacional · DANE · Segunda vuelta 2026</footer>
 
+<!-- LEAFLET SCRIPT -->
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
 
 <script>
 // ─── DATA ────────────────────────────────────────────
 const D = window.REGIONES_DATA;
-// Verificamos si D.municipios es un array directo, de lo contrario usamos Object.values
 const MUNIS_ARR = Array.isArray(D.municipios) ? D.municipios : Object.values(D.municipios);
 const DEPS = D.departamentos;
 
-// State
 let activeFilters = { dep: '', search: '', estado: '', orden: 'estrategico' };
 let mapMode = 'apoyo';
 let currentPage = 1;
@@ -395,19 +384,16 @@ let sortCol = 'cepeda';
 let sortDir = -1;
 let filtered = [];
 
-// Leaflet Variables
 let leafletMap;
 let mapCirclesLayer;
 
 // ─── INIT ────────────────────────────────────────────
 function init() {
-  // Header
   document.getElementById('h-votos').textContent = fmtVotos(D.resumen.votos_cepeda);
   document.getElementById('h-pct').textContent = D.resumen.cepeda + '%';
   const ganadas = MUNIS_ARR.filter(m => m.estado === 'ganada').length;
   document.getElementById('h-ganadas').textContent = ganadas;
 
-  // Populate dep select
   const sel = document.getElementById('f-dep');
   DEPS.sort((a,b) => a.depto.localeCompare(b.depto)).forEach(d => {
     const o = document.createElement('option');
@@ -416,13 +402,12 @@ function init() {
     sel.appendChild(o);
   });
 
-  // Event listeners
   ['f-dep','f-estado','f-orden'].forEach(id => {
     document.getElementById(id).addEventListener('change', onFilter);
   });
   document.getElementById('f-search').addEventListener('input', onFilter);
 
-  applyFilters(true); // Inicializamos aplicando filtros y haciendo zoom al mapa
+  applyFilters(true);
 }
 
 // ─── FILTER ──────────────────────────────────────────
@@ -432,7 +417,7 @@ function onFilter() {
   activeFilters.estado = document.getElementById('f-estado').value;
   activeFilters.orden = document.getElementById('f-orden').value;
   currentPage = 1;
-  applyFilters(true); // El true hace que el mapa haga auto-zoom a la nueva búsqueda
+  applyFilters(true);
 }
 
 function clearFilters() {
@@ -454,13 +439,13 @@ function applyFilters(zoomToBounds = false) {
   });
 
   sortFiltered(activeFilters.orden);
-
   document.getElementById('results-count').textContent = `${filtered.length} municipios`;
 
   drawMap(zoomToBounds);
   drawScatter();
   drawTopList();
   drawTable();
+  drawFocoJoven(); // Llamamos a la nueva función
   drawResumen();
   drawDepGrid();
 }
@@ -475,7 +460,7 @@ function sortFiltered(orden) {
     }
     if (orden === 'votos') return (b.votos_cepeda||0) - (a.votos_cepeda||0);
     if (orden === 'swing_neg') return (a.swing||0) - (b.swing||0);
-    if (orden === 'joven') return (a.joven||99) - (b.joven||99);
+    if (orden === 'joven') return (b.joven||-1) - (a.joven||-1); // Orden descendente por jóvenes
     if (orden === 'disputa') {
       const estadoScore = { disputa: 0, ganada: 1, adversa: 2 };
       return (estadoScore[a.estado]||2) - (estadoScore[b.estado]||2);
@@ -508,16 +493,12 @@ function colorByEstadoStr(e) {
 }
 
 function initLeafletMap() {
-  // Centro general de Colombia
   leafletMap = L.map('map-div').setView([4.5709, -74.2973], 5);
-  
-  // Capa base limpia y profesional (Positron)
   L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
-    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+    attribution: '&copy; OpenStreetMap contributors &copy; CARTO',
     subdomains: 'abcd',
     maxZoom: 19
   }).addTo(leafletMap);
-
   mapCirclesLayer = L.layerGroup().addTo(leafletMap);
 }
 
@@ -526,7 +507,7 @@ function setMapMode(mode) {
   document.querySelectorAll('.map-mode-btn').forEach(b => {
     b.classList.toggle('active', b.dataset.mode === mode);
   });
-  drawMap(false); // No hacemos zoom automático solo por cambiar de métrica
+  drawMap(false);
 }
 
 function drawMap(zoomToBounds = false) {
@@ -541,7 +522,7 @@ function drawMap(zoomToBounds = false) {
   function getR(m) {
     if (mapMode === 'votos') return 5 + Math.sqrt((m.votos_cepeda||0)/maxVotos) * 20;
     if (mapMode === 'swing') return 6 + Math.min(Math.abs(m.swing||0)/30, 1) * 15;
-    return 7; // Modo apoyo
+    return 7; 
   }
   
   function getColor(m) {
@@ -554,14 +535,12 @@ function drawMap(zoomToBounds = false) {
     return colorByEstadoStr(m.estado);
   }
 
-  // Ordenar para dibujar los pequeños arriba de los grandes
   const sorted = [...withCoords].sort((a,b) => getR(b) - getR(a));
 
   sorted.forEach(m => {
     const c = getColor(m);
     const r = getR(m);
     
-    // Crear círculo nativo de Leaflet
     const circle = L.circleMarker([m.lat, m.lon], {
       radius: r,
       fillColor: c,
@@ -600,13 +579,11 @@ function drawMap(zoomToBounds = false) {
     circle.addTo(mapCirclesLayer);
   });
 
-  // Encuadrar el mapa a la zona filtrada
   if (zoomToBounds && withCoords.length > 0) {
     const bounds = L.latLngBounds(withCoords.map(m => [m.lat, m.lon]));
-    leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 11 }); // MaxZoom para evitar acercarse exageradamente a un solo pueblo
+    leafletMap.fitBounds(bounds, { padding: [30, 30], maxZoom: 11 }); 
   }
 
-  // Leyenda
   const leg = document.getElementById('map-legend');
   if (mapMode === 'apoyo' || mapMode === 'votos') {
     leg.innerHTML = `
@@ -623,7 +600,7 @@ function drawMap(zoomToBounds = false) {
   }
 }
 
-// ─── SCATTER (Gráfico Edad y Voto) ───────────────────
+// ─── SCATTER ─────────────────────────────────────────
 function drawScatter() {
   const svg = document.getElementById('scatter-svg');
   const bbox = svg.getBoundingClientRect();
@@ -646,7 +623,6 @@ function drawScatter() {
 
   let html = '';
 
-  // Grid lines
   for (let v=0; v<=100; v+=25) {
     if (v >= minC && v <= maxC) {
       const y = py(v);
@@ -660,11 +636,9 @@ function drawScatter() {
     }
   }
 
-  // Axis labels
   html += `<text x="${pad.l + iW/2}" y="${H-2}" text-anchor="middle" font-size="11" fill="#6b7280">% Votantes jóvenes</text>`;
   html += `<text x="10" y="${pad.t + iH/2}" text-anchor="middle" font-size="11" fill="#6b7280" transform="rotate(-90,10,${pad.t+iH/2})">% Cepeda</text>`;
 
-  // Dots
   withData.forEach(m => {
     const x = px(m.joven), y = py(m.cepeda);
     const c = colorByEstadoStr(m.estado);
@@ -675,6 +649,43 @@ function drawScatter() {
   });
 
   svg.innerHTML = html;
+}
+
+// ─── FOCO JOVEN (NUEVA FUNCIÓN) ──────────────────────
+function drawFocoJoven() {
+  const tbody = document.getElementById('jovenes-tbody');
+  
+  // Filtramos los que tienen dato de jóvenes y los ordenamos de mayor a menor
+  const conJovenes = filtered.filter(m => m.joven !== null && m.joven !== undefined);
+  const top20 = conJovenes.sort((a,b) => b.joven - a.joven).slice(0, 20);
+
+  if (top20.length === 0) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;color:#999;padding:20px;">No hay datos de jóvenes en este filtro</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = top20.map((m, i) => {
+    // Definimos la estrategia según cómo nos está yendo ahí
+    let estrategia = '';
+    if (m.estado === 'adversa') {
+      estrategia = '🔴 Urgente: Pauta en TikTok/IG, activismo en universidades locales.';
+    } else if (m.estado === 'disputa') {
+      estrategia = '🟡 Clave: Voluntariado, eventos culturales, influencers de la zona.';
+    } else {
+      estrategia = '🟢 Mantener: Mensajes de WhatsApp, pedagogía para salir a votar.';
+    }
+
+    return `
+      <tr onclick="openModal('${m.slug}')">
+        <td style="color:var(--gris)"><b>#${i+1}</b></td>
+        <td><div class="td-muni">${m.municipio}</div><div class="td-depto">${m.depto}</div></td>
+        <td><b style="color:var(--morado);font-size:14px">${m.joven}%</b></td>
+        <td><span class="estado-pill pill-${m.estado}">${estadoLabel(m.estado)}</span></td>
+        <td>${fmtVotos(m.votos_cepeda)}</td>
+        <td style="font-size:12px;font-weight:600;color:var(--texto-suave)">${estrategia}</td>
+      </tr>
+    `;
+  }).join('');
 }
 
 // ─── TOP LIST ────────────────────────────────────────
@@ -765,7 +776,7 @@ function selectDep(dep) {
     activeFilters.dep = dep;
   }
   currentPage = 1;
-  applyFilters(true); // Auto-zoom para el departamento
+  applyFilters(true);
 }
 
 // ─── TABLE ───────────────────────────────────────────
@@ -830,7 +841,6 @@ function goPage(p) {
 
 // ─── MODAL ───────────────────────────────────────────
 function openModal(slug) {
-  // Ajuste principal: buscamos el elemento en el Array (no como clave de objeto)
   const m = MUNIS_ARR.find(x => x.slug === slug);
   if (!m) return;
 
@@ -871,7 +881,7 @@ function openModal(slug) {
       ${m.joven !== null && m.joven !== undefined ? `
       <div class="mbar-row">
         <div class="mbar-label" style="color:var(--texto-suave)">Jóvenes</div>
-        <div class="mbar-bg"><div class="mbar-fill" style="width:${m.joven}%;background:#6366f1"></div></div>
+        <div class="mbar-bg"><div class="mbar-fill" style="width:${m.joven}%;background:var(--morado)"></div></div>
         <div class="mbar-val">${m.joven}%</div>
       </div>` : ''}
     </div>
@@ -896,7 +906,7 @@ document.getElementById('modal-overlay').addEventListener('click', function(e) {
   if (e.target === this) closeModal();
 });
 
-// ─── TOOLTIP (Para el gráfico SVG) ───────────────────
+// ─── TOOLTIP ─────────────────────────────────────────
 function showTip(e, name, dep, cep, votos, swing, estado) {
   const tt = document.getElementById('tooltip');
   const swingSign = swing >= 0 ? '+' : '';
@@ -928,7 +938,7 @@ function switchTab(name) {
   document.querySelectorAll('.section').forEach(s => s.classList.toggle('active', s.id === 'tab-'+name));
   
   if (name === 'mapa' && leafletMap) {
-      leafletMap.invalidateSize(); // Refresca el mapa interno si estuvo oculto
+      leafletMap.invalidateSize(); 
   }
   if (name === 'analisis') drawScatter();
   if (name === 'municipios') drawTable();
